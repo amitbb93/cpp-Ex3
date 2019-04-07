@@ -55,9 +55,6 @@ const PhysicalNumber PhysicalNumber::operator++()
 */
 PhysicalNumber PhysicalNumber::operator++(int number)
 {
-	//PhysicalNumber temp(*this);
-    //valuse++;
-    //return temp;
     return *this;
 }
 /**
@@ -100,9 +97,6 @@ PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber pn)
 */      
 PhysicalNumber PhysicalNumber::operator--(int number)
 {
-    //PhysicalNumber temp(*this);
-    //value--;
-    //return temp;
     return *this;
 }
 

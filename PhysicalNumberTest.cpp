@@ -40,7 +40,7 @@ int main() {
     .CHECK_OUTPUT(d+c, "150[min]")
 
     .setname("Incompatible dimensions")
-    .CHECK_THROWS(a+c)
+	.CHECK_THROWS(a+c)
     .CHECK_THROWS(a+d)
     .CHECK_THROWS(b+c)
     .CHECK_THROWS(b+d)
@@ -69,7 +69,8 @@ int main() {
     .CHECK_OUTPUT(f, "100[kg]")
 
 	.setname("More incompatible dimensions")
-    .CHECK_THROWS(e+a)
+    .CHECK_THROWS(PhysicalNumber g(30, Unit::MIN))
+	.CHECK_THROWS(e+a)
     .CHECK_THROWS(e+b)
     .CHECK_THROWS(f+c)
     .CHECK_THROWS(f+d)
@@ -86,4 +87,11 @@ int main() {
     }
     cout <<  "*** Grade: " << grade << " ***" << endl;
     return grade;
+	
+	/*
+	- בדיקות של יחידה עם אותה יחידה ועם יחידות שונות
+	-בדיקות קלטים גבוהים אולי לעבור ל )UNSIGH)
+	- בדיקות על הכנסת מספר שלילי
+	- בדיקות על הכנסת מספר שלילי
+	*/
 }
