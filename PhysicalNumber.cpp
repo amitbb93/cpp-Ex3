@@ -2,6 +2,8 @@
 # include <iostream>
 # include "PhysicalNumber.h"
 # include "Unit.h"
+# include <cstdlib>
+# include <string>
 using namespace std;
 using namespace ariel;
 
@@ -14,37 +16,39 @@ PhysicalNumber::PhysicalNumber(double value,Unit unit)
     this->unit=unit;
 }
 
+PhysicalNumber::PhysicalNumber(const PhysicalNumber &pn) : PhysicalNumber(pn.value, pn.unit) {}
+
 /**
 * Destrustor
 */
 PhysicalNumber::~PhysicalNumber(){}
-
 
 //// operator "+" ////
 
 /**
 * Operator "+" is an Onry number
 */
-PhysicalNumber PhysicalNumber::operator+()
+PhysicalNumber &PhysicalNumber::operator+()
 {
+	if(this->value<0)this->value=-this->value;
 	return *this;
 }
 /**
 * Operator "+" takes the number and combin them together
 */
-PhysicalNumber PhysicalNumber::operator+(const PhysicalNumber pn) 
+PhysicalNumber PhysicalNumber::operator+(const PhysicalNumber& pn) 
 {
-		/*PhysicalNumber temp(*this); 
-        temp.value = real + obj.real; 
-        temp.imag = imag + obj.imag; 
-        return temp; */
-		return pn;
+	int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+	double result = value + whichConvert(a,b,pn.value);
+	return PhysicalNumber(result,unit);
 }
 
 /**
 * Operator "++" takes the number and rise him up
 */
-const PhysicalNumber PhysicalNumber::operator++()
+PhysicalNumber &PhysicalNumber::operator++()
 {
     value++;
     return *this;
@@ -53,16 +57,20 @@ const PhysicalNumber PhysicalNumber::operator++()
 /**
 * Operator "++" takes the number and rise him up by specific integer
 */
-PhysicalNumber PhysicalNumber::operator++(int number)
+PhysicalNumber &PhysicalNumber::operator++(int number)
 {
-    return *this;
+    PhysicalNumber& temp(*this);
+    value++;
+    return temp;
 }
 /**
 * Operator "+=" takes the number and rise him up by the number himself 
 */
-const PhysicalNumber PhysicalNumber::operator+=(const PhysicalNumber pn)
+PhysicalNumber &PhysicalNumber::operator+=(const PhysicalNumber& pn)
 {
-    return pn;
+	PhysicalNumber temp(*this + pn);
+    this->value = temp.value;
+    return *this;
 }
 
 //// operator "-" ////
@@ -70,23 +78,28 @@ const PhysicalNumber PhysicalNumber::operator+=(const PhysicalNumber pn)
 /**
 * Operator "-" is an Onry number
 */
-PhysicalNumber PhysicalNumber::operator-()
+PhysicalNumber &PhysicalNumber::operator-()
 {
+	this->value = -this->value;
     return *this;
 }
 
 /**
 * Operator "-" takes the numbers and subtract them 
 */
-PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber pn) 
+PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber& pn) 
 {
-    return pn;
+    int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+	double result = value - whichConvert(a,b,pn.value);
+	return PhysicalNumber(result,unit);
 }
 
 /**
 * Operator "--" decreases the number 
 */
- const PhysicalNumber PhysicalNumber::operator--()
+PhysicalNumber &PhysicalNumber::operator--()
 {
     value--;
     return *this;
@@ -95,90 +108,256 @@ PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber pn)
 /**
 * Operator "--" decreases the number by a specific integer
 */      
-PhysicalNumber PhysicalNumber::operator--(int number)
+PhysicalNumber &PhysicalNumber::operator--(int number)
 {
-    return *this;
+    PhysicalNumber& temp(*this);
+    value--;
+    return temp;
 }
 
 /**
 * Operator "-=" decreases the number by himself
 */ 
-const PhysicalNumber PhysicalNumber::operator-=(const PhysicalNumber pn)
+PhysicalNumber &PhysicalNumber::operator-=(const PhysicalNumber& pn)
 {
-    return pn;
+    PhysicalNumber temp(*this - pn);
+    value = temp.value;
+    return *this;
 }       
    
    
 //// Comparison operators ////
 
 /**
-* Operator "=" equalization operator
-*/ 
-const PhysicalNumber PhysicalNumber::operator=(const PhysicalNumber pn) 
-{
-    return pn;
-}
-
-/**
 * Operator "=" a boolean operator which return true if the a==b (a and b are PhysicalNumber)
 */ 
-bool PhysicalNumber::operator ==(const  PhysicalNumber  pn) 
+bool PhysicalNumber::operator ==(const  PhysicalNumber& pn)
 {
-    return true;
+    int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(a,b,pn.value);
+    return this->value == result;
 }
 
 /**
 * Operator "!=" a boolean operator which return true if the numbers arent equal
 */ 
-bool PhysicalNumber::operator !=(const  PhysicalNumber  pn)
+bool PhysicalNumber::operator !=(const  PhysicalNumber& pn)
 {
-    return true;
+    int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(a,b,pn.value);
+    return this->value != result;
 }
 
 /**
 * Operator "<=" a boolean operator which returns true if a<=b (a and b are PhysicalNumber)
 */ 
-bool PhysicalNumber::operator <=(const  PhysicalNumber  pn) 
+bool PhysicalNumber::operator <=(const  PhysicalNumber& pn) 
 {
-	return true;
+	int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(a,b,pn.value);
+    return this->value <= result;
 }
 
 /**
 * Operator ">=" a boolean operator which returns true if a>=b (a and b are PhysicalNumber)
 */ 
-bool PhysicalNumber::operator >=(const  PhysicalNumber  pn)
+bool PhysicalNumber::operator >=(const  PhysicalNumber& pn)
 {
-	return true;
+	int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(a,b,pn.value);
+    return this->value >= result;
 }
 
 /**
 * Operator "<" a boolean operator which returns true if a<b (a and b are PhysicalNumber)
 */ 
-bool PhysicalNumber::operator <(const  PhysicalNumber  pn) 
+bool PhysicalNumber::operator <(const  PhysicalNumber& pn) 
 {
-    return true;
+    int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(a,b,pn.value);
+    return this->value < result;
 }
 
 /**
 * Operator ">" a boolean operator which returns true if a>b (a and b are PhysicalNumber)
 */ 
-bool PhysicalNumber::operator >(const  PhysicalNumber  pn)
+bool PhysicalNumber::operator >(const  PhysicalNumber& pn)
 {
-    return true;
+    int a = checkUnit(*this);
+	int b = checkUnit(pn);
+	if(abs(a-b)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(a,b,pn.value);
+    return this->value > result;
 }       
        
 /**
-* Operator "<<" a boolean operator that acts like "cin"
+* Operator "<<" pn boolean operator that acts like "cin"
 */ 
-ostream& ariel::operator<<(ostream& os, const PhysicalNumber& pn)
+ostream& ariel::operator<<(ostream& os,const PhysicalNumber& pn)
 {
+	os.precision(11);
+	os << pn.value << "[" << Units[pn.unit] << "]";
     return os;
 }
 
 /**
-* Operator "<<" a boolean operator that acts like "cout"
+* Operator "<<" pn boolean operator that acts like "cout"
 */ 
 istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
 {
-	return is;
-}      
+	ios::pos_type startPosition = is.tellg();
+	int i = 0, j = 0;
+	double val = 0;
+	Unit un;
+	string str, group;
+	getline(is,str);
+	while((str.at(i) != '[') && i < str.length()){
+		if(((str.at(i)>=48)&&(str.at(i)<=57))||(str.at(i)!=46))i++;
+		else throw runtime_error("String do not match");
+	}
+	val =  stod(str.substr(0,i),nullptr);
+	group = str.substr(i+1,str.length());
+	group = group.substr(0,group.length()-1);
+	pn.value = val;
+	for(j=0; j<=9; j++){
+		if(!(group.compare(Units[j]))){
+			switch(j){
+			case 0:{un = Unit::SEC;break;}
+			case 1: {un = Unit::MIN;break;}
+			case 2: {un = Unit::HOUR;break;};
+			case 3: {un = Unit::CM;break;}
+			case 4: {un = Unit::M;break;}
+			case 5: {un = Unit::KM;break;}
+			case 6: {un = Unit::G;break;}
+			case 7: {un = Unit::KG;break;}
+			case 8: {un = Unit::TON;break;}
+			}
+			j=10;
+		}
+	}
+	pn = PhysicalNumber (val, un);
+    return is;
+}
+
+inline int PhysicalNumber::checkUnit(const PhysicalNumber &pn) {
+	//SEC,MIN,HOUR,CM,M,KM,G,KG,TON   
+   switch (pn.unit)
+    {
+    case SEC: return 0;
+    case MIN: return 1;
+	case HOUR: return 2;
+    case CM: return 10;
+	case M: return 11;
+    case KM: return 12;
+	case G: return 20;
+    case KG: return 21;
+	case TON: return 22;
+	
+	}
+}
+
+inline double PhysicalNumber::whichConvert(int a, int b, double val){
+	switch(a){
+		case 0: return convetSECMINHOUR(a, b, val);
+		case 1: return convetSECMINHOUR(a, b, val);
+		case 2: return convetSECMINHOUR(a, b, val);
+		case 10: return convetCMMKM(a, b, val);
+		case 11: return convetCMMKM(a, b, val);
+		case 12: return convetCMMKM(a, b, val);
+		case 20: return convetGKGTON(a, b, val);
+		case 21: return convetGKGTON(a, b, val);
+		case 22: return convetGKGTON(a, b, val);
+	}
+	return -1;
+}
+
+inline double PhysicalNumber::convetSECMINHOUR(int a, int b, double val) {
+	switch(a){
+	case 0:{
+		switch(b){
+		case 1: return val*60;
+		case 2: return val*3600;
+		default: return val;
+		}
+	}		
+	case 1:{
+		switch(b){
+		case 0: return val/60;
+		case 2: return val*60;
+		default: return val;
+		}
+	}
+	case 2:{
+		switch(b){
+		case 0: return val/3600;
+		case 1: return val/60;
+		default: return val;
+		}
+	}
+	}
+	return -1;
+}
+
+inline double PhysicalNumber::convetCMMKM(int a, int b, double val) {
+	switch(a){
+	case 10:{
+		switch(b){
+		case 11: return val*100;
+		case 12: return val*100000;
+		default: return val;
+		}
+	}		
+	case 11:{
+		switch(b){
+		case 10: return val/100;
+		case 12: return val*1000;
+		default: return val;
+		}
+	}
+	case 12:{
+		switch(b){
+		case 10: return val/100000;
+		case 11: return val/1000;
+		default: return val;
+		}
+	}
+	}
+	return -1;
+}
+
+inline double PhysicalNumber::convetGKGTON(int a, int b, double val) {
+	switch(a){
+	case 20:{
+		switch(b){
+		case 21: return val*1000;
+		case 22: return val*1000000;
+		default: return val;
+		}
+	}		
+	case 21:{
+		switch(b){
+		case 20: return val/1000;
+		case 22: return val*1000;
+		default: return val;
+		}
+	}
+	case 22:{
+		switch(b){
+		case 20: return val/1000000;
+		case 21: return val/1000;
+		default: return val;
+		}
+	}
+	}
+	return -1;
+}

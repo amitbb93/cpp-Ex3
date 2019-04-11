@@ -49,7 +49,7 @@ int main() {
     .CHECK_OK(istringstream("700[kg]") >> a)
     .CHECK_OUTPUT((a += PhysicalNumber(1, Unit::TON)), "1700[kg]");
 
-    // YOUR TESTS - INSERT AS MANY AS YOU WANT
+    //YOUR TESTS - INSERT AS MANY AS YOU WANT
 	
 	PhysicalNumber e(0, Unit::G);
     PhysicalNumber f(100, Unit::KG);
@@ -60,25 +60,33 @@ int main() {
 	.CHECK_OUTPUT(e, "0[g]")
     .CHECK_OUTPUT(f, "100[kg]")
 	
+	.CHECK_EQUAL(e != f, true)
+	.CHECK_EQUAL(e < f, true)
+	.CHECK_EQUAL(e > f, false)
+	.CHECK_EQUAL(e >= f, false)
+
 	.setname("More compatible dimensions")
-    .CHECK_OUTPUT(e+f, "1000[g]")
-    .CHECK_OUTPUT((e+=f), "1000[g]")
-    .CHECK_OUTPUT(e, "1000[g]")
+    .CHECK_OUTPUT(e+f, "100000[g]")
+    .CHECK_OUTPUT((e+=f), "100000[g]")
+    .CHECK_OUTPUT(e, "100000[g]")
     .CHECK_OUTPUT(f+f, "200[kg]")
     .CHECK_OUTPUT(f-f, "0[kg]")
     .CHECK_OUTPUT(f, "100[kg]")
+	
+	.CHECK_EQUAL(e == f, true)
+	.CHECK_EQUAL(e >= f, true)
 
 	.setname("More incompatible dimensions")
-    .CHECK_THROWS(PhysicalNumber g(30, Unit::MIN))
+    .CHECK_OK(PhysicalNumber g(30, Unit::MIN))
 	.CHECK_THROWS(e+a)
     .CHECK_THROWS(e+b)
     .CHECK_THROWS(f+c)
     .CHECK_THROWS(f+d)
 	
 	.setname("More basic input")
-    .CHECK_OK(istringstream("1000[g]") >> e)
+    //.CHECK_OK(istringstream("1000[g]") >> e)
     .CHECK_OUTPUT((f += PhysicalNumber(100, Unit::G)), "100.1[kg]")
-	
+
     .print(cout, /*show_grade=*/false);
     grade = testcase.grade();
     } else {
@@ -87,11 +95,4 @@ int main() {
     }
     cout <<  "*** Grade: " << grade << " ***" << endl;
     return grade;
-	
-	/*
-	- בדיקות של יחידה עם אותה יחידה ועם יחידות שונות
-	-בדיקות קלטים גבוהים אולי לעבור ל )UNSIGH)
-	- בדיקות על הכנסת מספר שלילי
-	- בדיקות על הכנסת מספר שלילי
-	*/
 }
