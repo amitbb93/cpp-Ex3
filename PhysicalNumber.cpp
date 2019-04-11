@@ -205,7 +205,7 @@ bool PhysicalNumber::operator >(const  PhysicalNumber& pn)
 */ 
 ostream& ariel::operator<<(ostream& os,const PhysicalNumber& pn)
 {
-	os.precision(11);
+	//os.precision(11);
 	os << pn.value << "[" << Units[pn.unit] << "]";
     return os;
 }
