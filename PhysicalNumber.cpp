@@ -57,9 +57,9 @@ PhysicalNumber &PhysicalNumber::operator++()
 /**
 * Operator "++" takes the number and rise him up by specific integer
 */
-PhysicalNumber &PhysicalNumber::operator++(int number)
+PhysicalNumber PhysicalNumber::operator++(int number)
 {
-    PhysicalNumber& temp(*this);
+    PhysicalNumber temp(*this);
     value++;
     return temp;
 }
@@ -108,9 +108,9 @@ PhysicalNumber &PhysicalNumber::operator--()
 /**
 * Operator "--" decreases the number by a specific integer
 */      
-PhysicalNumber &PhysicalNumber::operator--(int number)
+PhysicalNumber PhysicalNumber::operator--(int number)
 {
-    PhysicalNumber& temp(*this);
+    PhysicalNumber temp(*this);
     value--;
     return temp;
 }
@@ -216,14 +216,16 @@ ostream& ariel::operator<<(ostream& os,const PhysicalNumber& pn)
 istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
 {
 	ios::pos_type startPosition = is.tellg();
-	int i = 0, j = 0;
+	int i = 0, j = 0, flag = 0;
 	double val = 0;
 	Unit un;
 	string str, group;
 	getline(is,str);
+	if(!((str.at(0)>=48)&&(str.at(0)<=57))) return is;
+	if(str.at(str.length()-1) != ']') return is;
 	while((str.at(i) != '[') && i < str.length()){
-		if(((str.at(i)>=48)&&(str.at(i)<=57))||(str.at(i)!=46))i++;
-		else throw runtime_error("String do not match");
+		if(((str.at(i)>=48)&&(str.at(i)<=57))||(str.at(i)==46))i++;
+		else return is;
 	}
 	val =  stod(str.substr(0,i),nullptr);
 	group = str.substr(i+1,str.length());
@@ -232,20 +234,20 @@ istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
 	for(j=0; j<=9; j++){
 		if(!(group.compare(Units[j]))){
 			switch(j){
-			case 0:{un = Unit::SEC;break;}
-			case 1: {un = Unit::MIN;break;}
-			case 2: {un = Unit::HOUR;break;};
-			case 3: {un = Unit::CM;break;}
-			case 4: {un = Unit::M;break;}
-			case 5: {un = Unit::KM;break;}
-			case 6: {un = Unit::G;break;}
-			case 7: {un = Unit::KG;break;}
-			case 8: {un = Unit::TON;break;}
+			case 0:{un = Unit::SEC;flag=1;break;}
+			case 1: {un = Unit::MIN;flag=1;break;}
+			case 2: {un = Unit::HOUR;flag=1;break;};
+			case 3: {un = Unit::CM;flag=1;break;}
+			case 4: {un = Unit::M;flag=1;break;}
+			case 5: {un = Unit::KM;flag=1;break;}
+			case 6: {un = Unit::G;flag=1;break;}
+			case 7: {un = Unit::KG;flag=1;break;}
+			case 8: {un = Unit::TON;flag=1;break;}
 			}
 			j=10;
 		}
 	}
-	pn = PhysicalNumber (val, un);
+	if(flag==1)pn = PhysicalNumber (val, un);
     return is;
 }
 

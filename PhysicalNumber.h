@@ -21,14 +21,14 @@ namespace ariel
 	PhysicalNumber& operator+();
 	PhysicalNumber operator+(const PhysicalNumber& pn);
     PhysicalNumber& operator++();
-	PhysicalNumber& operator++(int number);
+	PhysicalNumber operator++(int number);
 	PhysicalNumber& operator+=(const PhysicalNumber& pn);
 
 	// operator "-"
 	PhysicalNumber& operator-();
 	PhysicalNumber operator-(const PhysicalNumber& pn);
 	PhysicalNumber& operator--();
-	PhysicalNumber& operator--(int number);
+	PhysicalNumber operator--(int number);
 	PhysicalNumber& operator-=(const PhysicalNumber& pn);
 	
 	// Comparison operators

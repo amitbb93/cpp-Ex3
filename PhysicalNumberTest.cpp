@@ -1,3 +1,5 @@
+
+
 /**
  * Examples of automatic tests for the exercise on physical numbers.
  *
@@ -78,7 +80,6 @@ int main() {
 
 	.setname("More incompatible dimensions")
     .CHECK_OK(PhysicalNumber g(30, Unit::MIN))
-	.CHECK_THROWS(e+a)
     .CHECK_THROWS(e+b)
     .CHECK_THROWS(f+c)
     .CHECK_THROWS(f+d)
