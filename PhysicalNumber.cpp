@@ -35,13 +35,18 @@ PhysicalNumber &PhysicalNumber::operator+()
 }
 /**
 * Operator "+" takes the number and combin them together
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is the sum of this value and pn's value
+* return a new PhysicalNumber after the calculation
 */
 PhysicalNumber PhysicalNumber::operator+(const PhysicalNumber& pn) 
 {
-	int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-	double result = value + whichConvert(a,b,pn.value);
+	int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+	double result = value + whichConvert(thisUnit,pnUnit,pn.value);
 	return PhysicalNumber(result,unit);
 }
 
@@ -64,7 +69,7 @@ PhysicalNumber PhysicalNumber::operator++(int number)
     return temp;
 }
 /**
-* Operator "+=" takes the number and rise him up by the number himself 
+* Operator "+=" takes the number and rise him up by the number himself. it uses the "+" operator above
 */
 PhysicalNumber &PhysicalNumber::operator+=(const PhysicalNumber& pn)
 {
@@ -86,13 +91,18 @@ PhysicalNumber &PhysicalNumber::operator-()
 
 /**
 * Operator "-" takes the numbers and subtract them 
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is the substract between this value and pn's value
+* return a new PhysicalNumber after the calculation
 */
 PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber& pn) 
 {
-    int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-	double result = value - whichConvert(a,b,pn.value);
+    int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+	double result = value - whichConvert(thisUnit,pnUnit,pn.value);
 	return PhysicalNumber(result,unit);
 }
 
@@ -106,7 +116,7 @@ PhysicalNumber &PhysicalNumber::operator--()
 } 
 
 /**
-* Operator "--" decreases the number by a specific integer
+* Operator "--" decreases the number by a specific integer.
 */      
 PhysicalNumber PhysicalNumber::operator--(int number)
 {
@@ -116,7 +126,7 @@ PhysicalNumber PhysicalNumber::operator--(int number)
 }
 
 /**
-* Operator "-=" decreases the number by himself
+* Operator "-=" decreases the number by himself. by using the "-" operator above.
 */ 
 PhysicalNumber &PhysicalNumber::operator-=(const PhysicalNumber& pn)
 {
@@ -130,78 +140,102 @@ PhysicalNumber &PhysicalNumber::operator-=(const PhysicalNumber& pn)
 
 /**
 * Operator "=" a boolean operator which return true if the a==b (a and b are PhysicalNumber)
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is pn's value by "this" unit
 */ 
 bool PhysicalNumber::operator ==(const  PhysicalNumber& pn)
 {
-    int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-    double result = whichConvert(a,b,pn.value);
+    int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(thisUnit,pnUnit,pn.value);
     return this->value == result;
 }
 
 /**
 * Operator "!=" a boolean operator which return true if the numbers arent equal
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is pn's value by "this" unit
 */ 
 bool PhysicalNumber::operator !=(const  PhysicalNumber& pn)
 {
-    int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-    double result = whichConvert(a,b,pn.value);
+    int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(thisUnit,pnUnit,pn.value);
     return this->value != result;
 }
 
 /**
 * Operator "<=" a boolean operator which returns true if a<=b (a and b are PhysicalNumber)
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is pn's value by "this" unit
 */ 
 bool PhysicalNumber::operator <=(const  PhysicalNumber& pn) 
 {
-	int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-    double result = whichConvert(a,b,pn.value);
+	int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(thisUnit,pnUnit,pn.value);
     return this->value <= result;
 }
 
 /**
 * Operator ">=" a boolean operator which returns true if a>=b (a and b are PhysicalNumber)
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is pn's value by "this" unit
 */ 
 bool PhysicalNumber::operator >=(const  PhysicalNumber& pn)
 {
-	int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-    double result = whichConvert(a,b,pn.value);
+	int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(thisUnit,pnUnit,pn.value);
     return this->value >= result;
 }
 
 /**
 * Operator "<" a boolean operator which returns true if a<b (a and b are PhysicalNumber)
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is pn's value by "this" unit
 */ 
 bool PhysicalNumber::operator <(const  PhysicalNumber& pn) 
 {
-    int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-    double result = whichConvert(a,b,pn.value);
+    int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(thisUnit,pnUnit,pn.value);
     return this->value < result;
 }
 
 /**
 * Operator ">" a boolean operator which returns true if a>b (a and b are PhysicalNumber)
+* pn - is a const PhysicalNumber
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* result - is pn's value by "this" unit
 */ 
 bool PhysicalNumber::operator >(const  PhysicalNumber& pn)
 {
-    int a = checkUnit(*this);
-	int b = checkUnit(pn);
-	if(abs(a-b)>2)throw runtime_error("Units do not match");
-    double result = whichConvert(a,b,pn.value);
+    int thisUnit = checkUnit(*this);
+	int pnUnit = checkUnit(pn);
+	if(abs(thisUnit-pnUnit)>2)throw runtime_error("Units do not match");
+    double result = whichConvert(thisUnit,pnUnit,pn.value);
     return this->value > result;
 }       
        
 /**
-* Operator "<<" pn boolean operator that acts like "cin"
+* Operator "<<" pn boolean operator that acts like "cin". it takes the name of the unit from "units" string array 
 */ 
 ostream& ariel::operator<<(ostream& os,const PhysicalNumber& pn)
 {
@@ -211,11 +245,17 @@ ostream& ariel::operator<<(ostream& os,const PhysicalNumber& pn)
 }
 
 /**
-* Operator "<<" pn boolean operator that acts like "cout"
+* Operator "<<" pn boolean operator that acts like "cout".
+* This function takes the input and convert it to string,split the string by "value" and "unit".
+* flag = 1-if the unit exist, 0-unreal unit 
+* val = the value of the input converting to double from string 
+* str = the full string from is 
+* group = the unit of the input before convertion
+* un = the unit of the input after convertion
 */ 
 istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
 {
-	ios::pos_type startPosition = is.tellg();
+	//ios::pos_type startPosition = is.tellg();
 	int i = 0, j = 0, flag = 0;
 	double val = 0;
 	Unit un;
@@ -251,6 +291,10 @@ istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
     return is;
 }
 
+/**
+* This function returns what unit is the specific PhysicalNumber
+* pn - is a const PhysicalNumber
+*/
 inline int PhysicalNumber::checkUnit(const PhysicalNumber &pn) {
 	//SEC,MIN,HOUR,CM,M,KM,G,KG,TON   
    switch (pn.unit)
@@ -268,39 +312,51 @@ inline int PhysicalNumber::checkUnit(const PhysicalNumber &pn) {
 	}
 }
 
-inline double PhysicalNumber::whichConvert(int a, int b, double val){
-	switch(a){
-		case 0: return convetSECMINHOUR(a, b, val);
-		case 1: return convetSECMINHOUR(a, b, val);
-		case 2: return convetSECMINHOUR(a, b, val);
-		case 10: return convetCMMKM(a, b, val);
-		case 11: return convetCMMKM(a, b, val);
-		case 12: return convetCMMKM(a, b, val);
-		case 20: return convetGKGTON(a, b, val);
-		case 21: return convetGKGTON(a, b, val);
-		case 22: return convetGKGTON(a, b, val);
+/**
+* This function checks which convertion is needed by units and sent to the currect function 
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* val - is the value of pn 
+*/
+inline double PhysicalNumber::whichConvert(int thisUnit, int pnUnit, double val){
+	switch(thisUnit){
+		case 0: return convetSECMINHOUR(thisUnit, pnUnit, val);
+		case 1: return convetSECMINHOUR(thisUnit, pnUnit, val);
+		case 2: return convetSECMINHOUR(thisUnit, pnUnit, val);
+		case 10: return convetCMMKM(thisUnit, pnUnit, val);
+		case 11: return convetCMMKM(thisUnit, pnUnit, val);
+		case 12: return convetCMMKM(thisUnit, pnUnit, val);
+		case 20: return convetGKGTON(thisUnit, pnUnit, val);
+		case 21: return convetGKGTON(thisUnit, pnUnit, val);
+		case 22: return convetGKGTON(thisUnit, pnUnit, val);
 	}
 	return -1;
 }
 
-inline double PhysicalNumber::convetSECMINHOUR(int a, int b, double val) {
-	switch(a){
+/**
+* This function convert to/from SEC/MIN/HOUR 
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* val - is the value of pn 
+*/
+inline double PhysicalNumber::convetSECMINHOUR(int thisUnit, int pnUnit, double val) {
+	switch(thisUnit){
 	case 0:{
-		switch(b){
+		switch(pnUnit){
 		case 1: return val*60;
 		case 2: return val*3600;
 		default: return val;
 		}
 	}		
 	case 1:{
-		switch(b){
+		switch(pnUnit){
 		case 0: return val/60;
 		case 2: return val*60;
 		default: return val;
 		}
 	}
 	case 2:{
-		switch(b){
+		switch(pnUnit){
 		case 0: return val/3600;
 		case 1: return val/60;
 		default: return val;
@@ -310,24 +366,30 @@ inline double PhysicalNumber::convetSECMINHOUR(int a, int b, double val) {
 	return -1;
 }
 
-inline double PhysicalNumber::convetCMMKM(int a, int b, double val) {
-	switch(a){
+/**
+* This function convert to/from CM/M/KM 
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* val - is the value of pn 
+*/
+inline double PhysicalNumber::convetCMMKM(int thisUnit, int pnUnit, double val) {
+	switch(thisUnit){
 	case 10:{
-		switch(b){
+		switch(pnUnit){
 		case 11: return val*100;
 		case 12: return val*100000;
 		default: return val;
 		}
 	}		
 	case 11:{
-		switch(b){
+		switch(pnUnit){
 		case 10: return val/100;
 		case 12: return val*1000;
 		default: return val;
 		}
 	}
 	case 12:{
-		switch(b){
+		switch(pnUnit){
 		case 10: return val/100000;
 		case 11: return val/1000;
 		default: return val;
@@ -337,24 +399,30 @@ inline double PhysicalNumber::convetCMMKM(int a, int b, double val) {
 	return -1;
 }
 
-inline double PhysicalNumber::convetGKGTON(int a, int b, double val) {
-	switch(a){
+/**
+* This function convert to/from G/KG/TON  
+* thisUnit - is the number of the "this" unit
+* pnUnit - is the number of the pn unit
+* val - is the value of pn 
+*/
+inline double PhysicalNumber::convetGKGTON(int thisUnit, int pnUnit, double val) {
+	switch(thisUnit){
 	case 20:{
-		switch(b){
+		switch(pnUnit){
 		case 21: return val*1000;
 		case 22: return val*1000000;
 		default: return val;
 		}
 	}		
 	case 21:{
-		switch(b){
+		switch(pnUnit){
 		case 20: return val/1000;
 		case 22: return val*1000;
 		default: return val;
 		}
 	}
 	case 22:{
-		switch(b){
+		switch(pnUnit){
 		case 20: return val/1000000;
 		case 21: return val/1000;
 		default: return val;
