@@ -15,7 +15,6 @@ namespace ariel
     double value;
 	PhysicalNumber(double value,Unit unit);
 	PhysicalNumber(const PhysicalNumber &pn);
-    ~PhysicalNumber();
     
 	// operator "+"
 	PhysicalNumber& operator+();
@@ -44,9 +43,9 @@ namespace ariel
     friend istream& operator>>(istream& is, PhysicalNumber& pn);
 	
 	inline int checkUnit(const PhysicalNumber &pn);
-	inline double whichConvert(int a, int b, double val);
-	inline double convetSECMINHOUR(int a, int b, double val);
-	inline double convetCMMKM(int a, int b, double val);
-	inline double convetGKGTON(int a, int b, double val);
+	inline double whichConvert(int thisUnit, int pnUnit, double val);
+	inline double convetSECMINHOUR(int thisUnit, int pnUnit, double val);
+	inline double convetCMMKM(int thisUnit, int pnUnit, double val);
+	inline double convetGKGTON(int thisUnit, int pnUnit, double val);
    };
  };

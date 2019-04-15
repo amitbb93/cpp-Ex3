@@ -16,17 +16,16 @@ PhysicalNumber::PhysicalNumber(double value,Unit unit)
     this->unit=unit;
 }
 
+/**
+* Copy Construstor
+*/
 PhysicalNumber::PhysicalNumber(const PhysicalNumber &pn) : PhysicalNumber(pn.value, pn.unit) {}
 
-/**
-* Destrustor
-*/
-PhysicalNumber::~PhysicalNumber(){}
 
 //// operator "+" ////
 
 /**
-* Operator "+" is an Onry number
+* Operator "+" 
 */
 PhysicalNumber &PhysicalNumber::operator+()
 {
@@ -81,7 +80,7 @@ PhysicalNumber &PhysicalNumber::operator+=(const PhysicalNumber& pn)
 //// operator "-" ////
 
 /**
-* Operator "-" is an Onry number
+* Operator "-"
 */
 PhysicalNumber &PhysicalNumber::operator-()
 {
@@ -255,7 +254,6 @@ ostream& ariel::operator<<(ostream& os,const PhysicalNumber& pn)
 */ 
 istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
 {
-	//ios::pos_type startPosition = is.tellg();
 	int i = 0, j = 0, flag = 0;
 	double val = 0;
 	Unit un;
@@ -274,7 +272,7 @@ istream& ariel::operator>>(istream& is, PhysicalNumber& pn)
 	for(j=0; j<=9; j++){
 		if(!(group.compare(Units[j]))){
 			switch(j){
-			case 0:{un = Unit::SEC;flag=1;break;}
+			case 0: {un = Unit::SEC;flag=1;break;}
 			case 1: {un = Unit::MIN;flag=1;break;}
 			case 2: {un = Unit::HOUR;flag=1;break;};
 			case 3: {un = Unit::CM;flag=1;break;}
@@ -320,15 +318,9 @@ inline int PhysicalNumber::checkUnit(const PhysicalNumber &pn) {
 */
 inline double PhysicalNumber::whichConvert(int thisUnit, int pnUnit, double val){
 	switch(thisUnit){
-		case 0: return convetSECMINHOUR(thisUnit, pnUnit, val);
-		case 1: return convetSECMINHOUR(thisUnit, pnUnit, val);
-		case 2: return convetSECMINHOUR(thisUnit, pnUnit, val);
-		case 10: return convetCMMKM(thisUnit, pnUnit, val);
-		case 11: return convetCMMKM(thisUnit, pnUnit, val);
-		case 12: return convetCMMKM(thisUnit, pnUnit, val);
-		case 20: return convetGKGTON(thisUnit, pnUnit, val);
-		case 21: return convetGKGTON(thisUnit, pnUnit, val);
-		case 22: return convetGKGTON(thisUnit, pnUnit, val);
+		case 0: case 1: case 2: return convetSECMINHOUR(thisUnit, pnUnit, val);
+		case 10: case 11: case 12: return convetCMMKM(thisUnit, pnUnit, val);
+		case 20: case 21: case 22: return convetGKGTON(thisUnit, pnUnit, val);
 	}
 	return -1;
 }
